@@ -1,4 +1,4 @@
-import nfcpy
+import nfc
 from gpiozero import LED
 
 

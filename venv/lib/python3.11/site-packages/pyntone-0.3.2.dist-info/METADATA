@@ -1,0 +1,40 @@
+Metadata-Version: 2.1
+Name: pyntone
+Version: 0.3.2
+Summary: API client for Kintone REST API.
+Project-URL: Homepage, https://github.com/kashi03/pyntone
+Project-URL: Repository, https://github.com/kashi03/pyntone
+Author: kashi03
+License-Expression: MIT
+License-File: LICENSE
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: >=3.9
+Requires-Dist: requests>=2.27.1
+Description-Content-Type: text/markdown
+
+# pyntone
+![](https://img.shields.io/badge/Python-%3E%3D3.9-blue)  
+API client for Kintone REST API.
+
+## Installation
+```bash
+$ pip install pyntone
+```
+
+## Example
+### Get Record
+```python
+from pyntone import ApiTokenAuth, KintoneRestAPIClient
+
+auth = ApiTokenAuth(api_token='[YOUR API TOKEN]')
+client = KintoneRestAPIClient(
+    base_url='https://[YOUR SUBDOMAIN].cybozu.com',
+    auth=auth
+)
+res = client.record.get_record(1, 1)
+print(res)
+```

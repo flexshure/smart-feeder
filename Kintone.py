@@ -2,11 +2,9 @@ import requests
 import json
 
 class Kintone:
-    petData = {}
-    lastEatenData = {}
-
     def refreshPetData(self):
         id = 1
+        petData = {}
         while True:
             url = 'https://nfc-smart-feeder.kintone.com/k/v1/record.json?app=1&id=' + str(id)
             response = requests.get(url, headers={'X-Cybozu-API-Token': 'CvLah6cYe2KZgVxbKeAgjVERCcnMSDbXjd3Hrab5'})
@@ -23,13 +21,14 @@ class Kintone:
             foodType = response["record"]["Text_2"]["value"]
             petID = response["record"]["$id"]["value"]
             #store data in dictionary
-            self.petData[petID] = {"Name": name, "UnitsFood": quantityFood, "MealTimes": mealTimes, "NFC Tag": nfcTag, "FoodType": foodType}
+            petData[petID] = {"Name": name, "UnitsFood": quantityFood, "MealTimes": mealTimes, "NFC Tag": nfcTag, "FoodType": foodType}
             id = id + 1
         
-        return self.petData
+        return petData
 
     def refreshTimeLastEatenData(self):
         id = 1
+        lastEatenData = {}
         while True:
             url = "https://nfc-smart-feeder.kintone.com/k/v1/record.json?app=2&id=" + str(id)
             response = requests.get(url, headers={'X-Cybozu-API-Token': 'RKylBI2WhrLWJoSba87HT3b5QgBuuWIh6xF1Plyc'})
@@ -38,13 +37,11 @@ class Kintone:
                 break
             
             response = json.loads(response.text)
-
             name = response["record"]["Text"]["value"]
-            self.lastEatenData[name] = response["record"]["Text_1"]["value"]
-
+            lastEatenData[name] = response["record"]["Text_1"]["value"]
             id = id + 1
             
-        return self.lastEatenData
+        return lastEatenData
 
     def getTimeLastEaten(self, petName):
         id = 1

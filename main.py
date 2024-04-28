@@ -12,6 +12,12 @@ def main():
     server = Kintone()
     controller = HardwareController()
 
+    ''' TODO:
+    -Buzzer
+        .interrupt 15 minutes after each scheduled meal, `chime' if pet hasn't eaten
+
+    '''
+
     while True:
         # blocking read
         last_read_nfc = reader.read_id()
@@ -47,7 +53,7 @@ def main():
 
         controller.dispense_units(units_to_dispense)
         # display on LED which pet got dispensed to
-        
+
         server.push_last_eaten_timestamp(pet_id, now)
 
 if __name__ == "__main__":

@@ -26,7 +26,6 @@ def main():
         .interrupt 15 minutes after each scheduled meal, `chime' if pet hasn't eaten
 
     '''
-    controller.reset_LEDs()
     while True:
         # blocking read
         last_read_nfc = reader.read_id()
@@ -53,7 +52,7 @@ def main():
         if meal_credit == 0:
             # nothing to dispense, continue to next tag scan
             # blink LED
-            controller.blink_LED(int(pet_id), num_blinks=3)
+            controller.blink_LED_from_id(int(pet_id), num_blinks=3)
             continue
 
         units_to_dispense = meal_credit * int(server.schedule_table[pet_id]['units_food'])
@@ -63,7 +62,7 @@ def main():
 
         if now > mealtimes[-1]:
             # pet has eaten all meals for today
-            controller.set_LED(int(pet_id))
+            controller.set_LED_from_id(int(pet_id))
 
         server.push_last_eaten_timestamp(pet_id, now)
 

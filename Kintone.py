@@ -4,43 +4,47 @@ from Time import Time
 
 class Kintone:
     schedule_table = {}
+    last_eaten_table = {}
 
     def update_schedule(self):
-        id = 1
-        while True:
-            url = 'https://nfc-smart-feeder.kintone.com/k/v1/record.json?app=1&id=' + str(id)
-            response = requests.get(url, headers={'X-Cybozu-API-Token': 'CvLah6cYe2KZgVxbKeAgjVERCcnMSDbXjd3Hrab5'})
-            if "is not found" in response.text:
-                break
+        url = 'https://nfc-smart-feeder.kintone.com/k/v1/records.json?app=1'
+        response = requests.get(url, headers={'X-Cybozu-API-Token': 'CvLah6cYe2KZgVxbKeAgjVERCcnMSDbXjd3Hrab5'})
             
-            response = json.loads(response.text)
-            #parse response
-            name = response["record"]["Text"]["value"]
-            meal_times = response["record"]["Text_0"]["value"]
+        response = json.loads(response.text)
+        
+        for i in range(0, len(response["records"])): 
+            name = response["records"][i]["Text"]["value"]
+            meal_times = response["records"][i]["Text_0"]["value"]
             meal_times = meal_times.split(',')
-            quantity_food = response["record"]["Number"]["value"]
-            nfc_tag = response["record"]["Text_1"]["value"]
-            food_type = response["record"]["Text_2"]["value"]
-            pet_id = response["record"]["Record_number"]["value"]
+            quantity_food = response["records"][i]["Number"]["value"]
+            nfc_tag = response["records"][i]["Text_1"]["value"]
+            food_type = response["records"][i]["Text_2"]["value"]
+            pet_id = response["records"][i]["Record_number"]["value"]
             #store data in dictionary
             self.schedule_table[pet_id] = {"name": name, "units_food": quantity_food, "meal_times": meal_times, "NFC_ID": nfc_tag, "food_type": food_type}
-            id = id + 1
+
+    def update_last_eaten(self):
+        id = 1
+        url = 'https://nfc-smart-feeder.kintone.com/k/v1/records.json?app=2'
+        response = requests.get(url, headers={'X-Cybozu-API-Token': 'RKylBI2WhrLWJoSba87HT3b5QgBuuWIh6xF1Plyc'})
+        
+        response = json.loads(response.text)
+
+        for i in range(0, len(response["records"])):
+            pet_id = response["records"][i]["Text_0"]["value"]
+
+            if response["records"][i]["Text_1"]["value"] == "":
+                last_ate = Time(0,0)
+            else:
+                time = response["records"][i]["Text_1"]["value"].split(":")
+                last_ate = Time(int(time[0]), int(time[1]))
+            name = response["records"][i]["Text"]["value"]
+            record_number = response["records"][i]["Record_number"]["value"]
+                
+            self.last_eaten_table[pet_id] = {"name": name, "last_ate": last_ate, "record_number": record_number}
 
     def get_last_eaten_timestamp(self, pet_id):
-        id = 1
-        while True:
-            url = "https://nfc-smart-feeder.kintone.com/k/v1/record.json?app=2&id=" + str(id)
-            response = requests.get(url, headers={'X-Cybozu-API-Token': 'RKylBI2WhrLWJoSba87HT3b5QgBuuWIh6xF1Plyc'})
-            
-            if "is not found" in response.text:
-                break
-            response = json.loads(response.text)
-            if pet_id == response["record"]["Text_0"]["value"]:
-                if response["record"]["Text_1"]["value"] == "":
-                    return Time(0, 0)
-                split = response["record"]["Text_1"]["value"].split(":")
-                return Time(int(split[0]), int(split[1]))
-            id = id + 1
+        return self.last_eaten_table[pet_id]["last_ate"]
 
     def pet_id_from_NFC(self, NFC_ID):
         for entry in self.schedule_table:
@@ -72,7 +76,6 @@ class Kintone:
         record_number = str(self.get_record_number_from_pet_id(pet_id))
         url = "https://nfc-smart-feeder.kintone.com/k/v1/record.json?app=2&id=" + record_number
 
-        print(now.minutes)
         if(now.minutes <= 9):
             time = str(now.hours) + ":0" + str(now.minutes)
         else:   
@@ -81,7 +84,8 @@ class Kintone:
         post = requests.put(url, headers={'X-Cybozu-API-Token': 'RKylBI2WhrLWJoSba87HT3b5QgBuuWIh6xF1Plyc'}, json=postJson)
 
     def get_record_number_from_pet_id(self, pet_id):
-        id = 1
+        return self.last_eaten_table[pet_id]["record_number"]
+        '''
         while True:
             url = "https://nfc-smart-feeder.kintone.com/k/v1/record.json?app=2&id=" + str(id)
             response = requests.get(url, headers={'X-Cybozu-API-Token': 'RKylBI2WhrLWJoSba87HT3b5QgBuuWIh6xF1Plyc'})
@@ -94,6 +98,7 @@ class Kintone:
                 return response["record"]["Record_number"]["value"]
 
             id = id + 1
+        '''
     
     def get_mealtimes(self, pet_id):
         meal_times = self.schedule_table[str(pet_id)]["meal_times"]

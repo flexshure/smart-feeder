@@ -13,7 +13,7 @@ def main():
     reader = SimpleMFRC522()
     server = Kintone()
 
-    schedule.every().day.at("00:00:00").do(controller.resetLEDs)
+    schedule.every().day.at("00:00:00").do(controller.reset_LEDs)
     def __schedule_loop():
         while True:
             time.sleep(1)
@@ -32,10 +32,10 @@ def main():
         last_read_nfc = reader.read_id()
 
         server.update_schedule()
-        pet_id = server.pet_id_from_NFC(last_read_nfc)
+        pet_id = server.pet_id_from_NFC(str(last_read_nfc))
 
-        last_eaten = server.get_last_eaten_timestamp(pet_id) # -> Time
-        mealtimes = server.get_mealtimes(pet_id) # list of Time
+        last_eaten = server.get_last_eaten_timestamp(str(pet_id)) # -> Time
+        mealtimes = server.get_mealtimes(str(pet_id)) # list of Time
 
         now = Time(hours=datetime.now().hour, minutes=datetime.now().minute)
 
@@ -51,14 +51,14 @@ def main():
 
         if now > mealtimes[-1] and meal_credit == 0:
             # pet has eaten all meals for today
-            controller.set_led(pet_id)
+            controller.set_LED(pet_id)
 
         if meal_credit == 0:
             # nothing to dispense, continue to next tag scan
             # maybe play buzzer?
             continue
 
-        units_to_dispense = meal_credit * server.schedule_table[pet_id]['units_food']
+        units_to_dispense = meal_credit * int(server.schedule_table[pet_id]['units_food'])
 
         controller.dispense_food(units_to_dispense)
         # display on LED which pet got dispensed to

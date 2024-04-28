@@ -48,32 +48,32 @@ class HardwareController:
 
         self.buzzer = GPIO.PWM(BUZZER_PIN, BUZZER_NOTE_C)
 
-    def turnMotor(self, speed=0.001, angle_degs=45, ccwise=False):
-        t = Thread(target=self.__turnMotor, args=(speed, angle_degs, ccwise))
+    def turn_motor(self, speed=0.001, angle_degs=45, ccwise=False):
+        t = Thread(target=self.__turn_motor, args=(speed, angle_degs, ccwise))
         t.start()
-    def __turnMotor(self, speed, angle_degs, ccwise):
+    def __turn_motor(self, speed, angle_degs, ccwise):
         self.rpi_motor.motor_run(MOTOR_PINS, speed, 512*angle_degs/360, ccwise, False, "half", 0.05)
     
-    def dispenseFood(self, units=1):
-        t = Thread(target=self.__dispenseFood, args=(units,))
+    def dispense_food(self, units=1):
+        t = Thread(target=self.__dispense_food, args=(units,))
         t.start()
-    def __dispenseFood(self, units):
-        self.__turnMotor(0.001, 45*units, False)
+    def __dispense_food(self, units):
+        self.__turn_motor(0.001, 45*units, False)
 
-    def playMelody(self):
-        t = Thread(target=self.__playMelody)
+    def play_melody(self):
+        t = Thread(target=self.__play_melody)
         t.start()
-    def __playMelody(self):
+    def __play_melody(self):
         self.buzzer.start(50)
         for note, duration in self.melody:
                 self.buzzer.ChangeFrequency(note)
                 time.sleep(duration)
         self.buzzer.stop()
 
-    def displayBinLED(self, num: int):
-        t = Thread(target=self.__displayBinLED, args=(num,))
+    def display_bin_LED(self, num: int):
+        t = Thread(target=self.__display_bin_LED, args=(num,))
         t.start()
-    def __displayBinLED(self, num):
+    def __display_bin_LED(self, num):
         if num % 8 != num % 4: GPIO.output(BLUE_LED_PIN, GPIO.HIGH)
         if num % 4 != num % 2: GPIO.output(YELLOW_LED_PIN, GPIO.HIGH)
         if num % 2 != 0      : GPIO.output(RED_LED_PIN, GPIO.HIGH)
@@ -82,22 +82,22 @@ class HardwareController:
         GPIO.output(YELLOW_LED_PIN, GPIO.LOW)
         GPIO.output(RED_LED_PIN, GPIO.LOW)
     
-    def setLED(self, id, hot=True):
-        t = Thread(target=self.__setLED, args=(id, hot))
+    def set_LED(self, id, hot=True):
+        t = Thread(target=self.__set_LED, args=(id, hot))
         t.start()
-    def __setLED(self, id, hot):
+    def __set_LED(self, id, hot):
         signal = GPIO.LOW
         if hot: signal = GPIO.HIGH
         if   id % 3 == 1: GPIO.output(BLUE_LED_PIN, signal)
         elif id % 3 == 2: GPIO.output(YELLOW_LED_PIN, signal)
         elif id % 3 == 0: GPIO.output(RED_LED_PIN, signal)
     
-    def resetLEDs(self):
-        t = Thread(target=self.__resetLEDs)
+    def reset_LEDs(self):
+        t = Thread(target=self.__reset_LEDs)
         t.start()
-    def __resetLEDs(self):
-        self.__setLED(1, False)
-        self.__setLED(2, False)
-        self.__setLED(3, False)
+    def __reset_LEDs(self):
+        self.__set_LED(1, False)
+        self.__set_LED(2, False)
+        self.__set_LED(3, False)
 
 

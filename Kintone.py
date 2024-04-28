@@ -35,7 +35,7 @@ class Kintone:
             if "is not found" in response.text:
                 break
             response = json.loads(response.text)
-            if pet_id == response["record"]["$id"]["value"]:
+            if pet_id == response["record"]["Text_0"]["value"]:
                 if response["record"]["Text_1"]["value"] == "":
                     return Time(0, 0)
                 split = response["record"]["Text_1"]["value"].split(":")
@@ -75,7 +75,7 @@ class Kintone:
         post = requests.put(url, headers={'X-Cybozu-API-Token': 'RKylBI2WhrLWJoSba87HT3b5QgBuuWIh6xF1Plyc'}, json=postJson)
     
     def get_mealtimes(self, pet_id):
-        meal_times = self.schedule_table[pet_id]["meal_times"]
+        meal_times = self.schedule_table[str(pet_id)]["meal_times"]
         meal_times_formatted = []
         for i in range(0, len(meal_times)):
             split = meal_times[i].split(':')

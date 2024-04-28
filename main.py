@@ -2,8 +2,6 @@ import nfc
 from gpiozero import LED
 from mfrc522 import SimpleMFRC522
 
-import threading
-
 reader = SimpleMFRC522()
 
 def main():

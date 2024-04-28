@@ -10,7 +10,7 @@ def main():
     while True:
 
         # blocking read
-        last_read_id = reader.read_id()
+        last_read_nfc = reader.read_id()
 
 
         '''

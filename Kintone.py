@@ -44,9 +44,11 @@ class Kintone:
             self.last_eaten_table[pet_id] = {"name": name, "last_ate": last_ate, "record_number": record_number}
 
     def get_last_eaten_timestamp(self, pet_id):
+        self.update_last_eaten()
         return self.last_eaten_table[pet_id]["last_ate"]
 
     def pet_id_from_NFC(self, NFC_ID):
+        self.update_schedule()
         for entry in self.schedule_table:
             if self.schedule_table[entry]["NFC_ID"] == NFC_ID:
                 return entry
@@ -84,10 +86,9 @@ class Kintone:
         if type(now) == str and now == "":
             record_number = str(self.get_record_number_from_pet_id(pet_id))
             url = "https://nfc-smart-feeder.kintone.com/k/v1/record.json?app=2&id=" + record_number
-
             postJson = {'app': 2,'id': record_number,'record': {'Text_1': {'value': ""}}}
             post = requests.put(url, headers={'X-Cybozu-API-Token': 'RKylBI2WhrLWJoSba87HT3b5QgBuuWIh6xF1Plyc'}, json=postJson)
-
+            return
 
         record_number = str(self.get_record_number_from_pet_id(pet_id))
         url = "https://nfc-smart-feeder.kintone.com/k/v1/record.json?app=2&id=" + record_number
@@ -100,6 +101,7 @@ class Kintone:
         post = requests.put(url, headers={'X-Cybozu-API-Token': 'RKylBI2WhrLWJoSba87HT3b5QgBuuWIh6xF1Plyc'}, json=postJson)
 
     def get_record_number_from_pet_id(self, pet_id):
+        self.update_last_eaten()
         return self.last_eaten_table[pet_id]["record_number"]
         '''
         while True:
@@ -117,6 +119,7 @@ class Kintone:
         '''
     
     def get_mealtimes(self, pet_id):
+        self.update_last_eaten()
         meal_times = self.schedule_table[str(pet_id)]["meal_times"]
         meal_times_formatted = []
         for i in range(0, len(meal_times)):

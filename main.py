@@ -20,15 +20,13 @@ def main():
         pet_id = server.pet_id_from_NFC(last_read_nfc)
 
         last_eaten = server.get_last_eaten_timestamp(pet_id) # -> Time
-
         mealtimes = server.get_mealtimes(pet_id) # list of Time
 
         now = Time(hours=datetime.now().hour, minutes=datetime.now().minute)
 
-        meal_credit = 0
-
         # count how many mealtimes between last_eaten_mealtime and now
         # populates meal_credit
+        meal_credit = 0
         for scheduled_time in mealtimes:
             if last_eaten >= scheduled_time:
                 continue
@@ -41,13 +39,15 @@ def main():
             controller.set_led(pet_id)
 
         if meal_credit == 0:
-            # continue to next tag scan
+            # nothing to dispense, continue to next tag scan
+            # maybe play buzzer?
             continue
 
         units_to_dispense = meal_credit * server.schedule_table[pet_id]['UnitsFood']
 
-        controller.dispense_units(units_to_dispense) # display on LED which pet got dispensed to
-
+        controller.dispense_units(units_to_dispense)
+        # display on LED which pet got dispensed to
+        
         server.push_last_eaten_timestamp(pet_id, now)
 
 if __name__ == "__main__":

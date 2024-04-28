@@ -85,6 +85,10 @@ class Kintone:
         else:   
             time = str(now.hours) + ":" + str(now.minutes)
         postJson = {'app': 2,'id': record_number,'record': {'Text_1': {'value': time}}}
+
+        if pet_id not in self.last_eaten_table.keys():
+            self.add_empty_entry_last_eaten(pet_id, self.schedule_table[entry]["name"]) 
+
         post = requests.put(url, headers={'X-Cybozu-API-Token': 'RKylBI2WhrLWJoSba87HT3b5QgBuuWIh6xF1Plyc'}, json=postJson)
 
     def get_record_number_from_pet_id(self, pet_id):

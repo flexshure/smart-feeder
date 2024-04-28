@@ -53,7 +53,7 @@ class Kintone:
             
         return self.update_pet_NFC_ID(NFC_ID)
 
-    def add_empty_entry_last_eaten_app(self, pet_ID, pet_name):
+    def add_empty_entry_last_eaten(self, pet_ID, pet_name):
         api_url = "https://nfc-smart-feeder.kintone.com/k/v1/record.json"
         #send a new data record, ISSUE: Can't set Record_number (aka pet_id)
         postJson = {'app': 2,'record': {'Text': {'value': pet_name},'Text_1': {'value': ''}, 'Text_0': {'value': pet_ID}}}
@@ -64,7 +64,10 @@ class Kintone:
             if self.schedule_table[entry]["NFC_ID"] == "":
                 self.schedule_table[entry]["NFC_ID"] = NFC_ID
                 self.push_updated_NFC_to_db(entry, NFC_ID)
-                self.add_empty_entry_last_eaten_app(entry, self.schedule_table[entry]["name"])
+
+                if entry not in self.last_eaten_table.keys():
+                    self.add_empty_entry_last_eaten(entry, self.schedule_table[entry]["name"])
+
                 return entry
 
     def push_updated_NFC_to_db(self, pet_id, NFC_ID):

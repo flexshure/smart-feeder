@@ -26,7 +26,7 @@ def main():
         .interrupt 15 minutes after each scheduled meal, `chime' if pet hasn't eaten
 
     '''
-
+    controller.reset_LEDs()
     while True:
         # blocking read
         last_read_nfc = reader.read_id()

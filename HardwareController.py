@@ -85,6 +85,7 @@ class HardwareController:
     def set_LED(self, id, hot=True):
         t = Thread(target=self.__set_LED, args=(id, hot))
         t.start()
+
     def __set_LED(self, id, hot):
         signal = GPIO.LOW
         if hot: signal = GPIO.HIGH
@@ -100,4 +101,5 @@ class HardwareController:
         self.__set_LED(2, False)
         self.__set_LED(3, False)
 
-
+    def blink_LED(self, id, hot=True, num_blinks):
+        pass

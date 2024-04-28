@@ -60,7 +60,7 @@ def main():
 
         units_to_dispense = meal_credit * server.schedule_table[pet_id]['UnitsFood']
 
-        controller.dispense_units(units_to_dispense)
+        controller.dispense_food(units_to_dispense)
         # display on LED which pet got dispensed to
 
         server.push_last_eaten_timestamp(pet_id, now)

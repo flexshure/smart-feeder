@@ -49,10 +49,6 @@ def main():
             if now >= scheduled_time:
                 meal_credit += 1 
 
-        if now > mealtimes[-1] and meal_credit == 0:
-            # pet has eaten all meals for today
-            controller.set_LED(int(pet_id))
-
         if meal_credit == 0:
             # nothing to dispense, continue to next tag scan
             # maybe play buzzer?
@@ -62,6 +58,10 @@ def main():
 
         controller.dispense_food(units_to_dispense)
         # display on LED which pet got dispensed to
+
+        if now > mealtimes[-1]:
+            # pet has eaten all meals for today
+            controller.set_LED(int(pet_id))
 
         server.push_last_eaten_timestamp(pet_id, now)
 

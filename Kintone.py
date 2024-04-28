@@ -67,6 +67,9 @@ class Kintone:
                 self.push_updated_NFC_to_db(entry, NFC_ID)
 
                 if entry not in self.last_eaten_table.keys():
+                    print(f"adding new row for {entry} ({type(entry)})")
+                    print(f"keys: {self.last_eaten_table.keys()}")
+
                     self.add_empty_entry_last_eaten(entry, self.schedule_table[entry]["name"])
 
                 return entry
@@ -77,6 +80,15 @@ class Kintone:
         post = requests.put(url, headers={'X-Cybozu-API-Token': 'CvLah6cYe2KZgVxbKeAgjVERCcnMSDbXjd3Hrab5'}, json=postJson)
     
     def push_last_eaten_timestamp(self, pet_id, now):
+        #reset case at midnight
+        if now == "":
+            record_number = str(self.get_record_number_from_pet_id(pet_id))
+            url = "https://nfc-smart-feeder.kintone.com/k/v1/record.json?app=2&id=" + record_number
+
+            postJson = {'app': 2,'id': record_number,'record': {'Text_1': {'value': ""}}}
+            post = requests.put(url, headers={'X-Cybozu-API-Token': 'RKylBI2WhrLWJoSba87HT3b5QgBuuWIh6xF1Plyc'}, json=postJson)
+
+
         record_number = str(self.get_record_number_from_pet_id(pet_id))
         url = "https://nfc-smart-feeder.kintone.com/k/v1/record.json?app=2&id=" + record_number
 
@@ -85,10 +97,6 @@ class Kintone:
         else:   
             time = str(now.hours) + ":" + str(now.minutes)
         postJson = {'app': 2,'id': record_number,'record': {'Text_1': {'value': time}}}
-
-        if pet_id not in self.last_eaten_table.keys():
-            self.add_empty_entry_last_eaten(pet_id, self.schedule_table[entry]["name"]) 
-
         post = requests.put(url, headers={'X-Cybozu-API-Token': 'RKylBI2WhrLWJoSba87HT3b5QgBuuWIh6xF1Plyc'}, json=postJson)
 
     def get_record_number_from_pet_id(self, pet_id):

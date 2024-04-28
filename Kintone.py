@@ -39,7 +39,7 @@ class Kintone:
                 if response["record"]["Text_1"]["value"] == "":
                     return Time(0, 0)
                 split = response["record"]["Text_1"]["value"].split(":")
-                return Time(split[0], split[1])
+                return Time(int(split[0]), int(split[1]))
             id = id + 1
 
     def pet_id_from_NFC(self, NFC_ID):
@@ -71,7 +71,12 @@ class Kintone:
     def push_last_eaten_timestamp(self, pet_id, now):
         record_number = str(self.get_record_number_from_pet_id(pet_id))
         url = "https://nfc-smart-feeder.kintone.com/k/v1/record.json?app=2&id=" + record_number
-        time = str(now.hours) + ":" + str(now.minutes)
+
+        print(now.minutes)
+        if(now.minutes <= 9):
+            time = str(now.hours) + ":0" + str(now.minutes)
+        else:   
+            time = str(now.hours) + ":" + str(now.minutes)
         postJson = {'app': 2,'id': record_number,'record': {'Text_1': {'value': time}}}
         post = requests.put(url, headers={'X-Cybozu-API-Token': 'RKylBI2WhrLWJoSba87HT3b5QgBuuWIh6xF1Plyc'}, json=postJson)
 

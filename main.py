@@ -1,12 +1,19 @@
 import nfc
 from gpiozero import LED
+from mfrc522 import SimpleMFRC522
 
+reader = SimpleMFRC522()
 
 def main():
     while True:
+
+        # blocking read
+        last_read_nfc = reader.read_id()
+
+
         '''
         Main loop structure:
-
+        
         check NFC sensor
             --> if tag detected, refresh data from kintone
                 match NFC tag detected to a pet

@@ -53,7 +53,7 @@ def main():
         if meal_credit == 0:
             # nothing to dispense, continue to next tag scan
             # blink LED
-            # controller.blink_LED(int(pet_id))
+            controller.blink_LED(int(pet_id), num_blinks=3)
             continue
 
         units_to_dispense = meal_credit * int(server.schedule_table[pet_id]['units_food'])

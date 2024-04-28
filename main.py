@@ -65,5 +65,7 @@ def main():
 
         server.push_last_eaten_timestamp(pet_id, now)
 
+        time.sleep(5)
+
 if __name__ == "__main__":
     main()

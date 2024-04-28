@@ -6,10 +6,10 @@ reader = MFRC522.MFRC522()
 def read_data(sector):
     status = reader.MFRC522_Auth(reader.PICC_AUTHENT1A, sector, [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF], reader.uid)
     if status == reader.MI_OK:
-    data = reader.MFRC522_Read(sector)
-    return data
+        data = reader.MFRC522_Read(sector)
+        return data
     else:
-    return None
+        return None
 
 sector_to_read = 1
 read_data = read_data(sector_to_read)

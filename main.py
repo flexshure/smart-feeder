@@ -34,6 +34,7 @@ def main():
         server.update_schedule()
         pet_id = server.pet_id_from_NFC(str(last_read_nfc))
 
+        server.update_last_eaten()
         last_eaten = server.get_last_eaten_timestamp(str(pet_id)) # -> Time
         mealtimes = server.get_mealtimes(str(pet_id)) # list of Time
 

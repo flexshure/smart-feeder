@@ -58,7 +58,7 @@ def main():
             # maybe play buzzer?
             continue
 
-        units_to_dispense = meal_credit * server.schedule_table[pet_id]['UnitsFood']
+        units_to_dispense = meal_credit * server.schedule_table[pet_id]['units_food']
 
         controller.dispense_food(units_to_dispense)
         # display on LED which pet got dispensed to

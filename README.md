@@ -1,2 +1,2 @@
 # Using Python venv
-While in `smart-feeder/`, run `$ source venv/bin/activate`.
+While in `smart-feeder/`, execute `$ source venv/bin/activate`.

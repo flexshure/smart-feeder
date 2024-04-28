@@ -39,7 +39,7 @@ class Kintone:
                 if response["record"]["Text_1"]["value"] == "":
                     return Time(0, 0)
                 split = response["record"]["Text_1"]["value"].split(":")
-                return Time(split[0], split[1])
+                return Time(int(split[0]), int(split[1]))
             id = id + 1
 
     def pet_id_from_NFC(self, NFC_ID):

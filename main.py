@@ -51,7 +51,7 @@ def main():
 
         if now > mealtimes[-1] and meal_credit == 0:
             # pet has eaten all meals for today
-            controller.set_LED(pet_id)
+            controller.set_LED(int(pet_id))
 
         if meal_credit == 0:
             # nothing to dispense, continue to next tag scan

@@ -81,7 +81,7 @@ class Kintone:
     
     def push_last_eaten_timestamp(self, pet_id, now):
         #reset case at midnight
-        if now == "":
+        if type(now) == str and now == "":
             record_number = str(self.get_record_number_from_pet_id(pet_id))
             url = "https://nfc-smart-feeder.kintone.com/k/v1/record.json?app=2&id=" + record_number
 

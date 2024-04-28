@@ -67,9 +67,6 @@ class Kintone:
                 self.push_updated_NFC_to_db(entry, NFC_ID)
 
                 if entry not in self.last_eaten_table.keys():
-                    print(f"adding new row for {entry} ({type(entry)})")
-                    print(f"keys: {self.last_eaten_table.keys()}")
-
                     self.add_empty_entry_last_eaten(entry, self.schedule_table[entry]["name"])
 
                 return entry

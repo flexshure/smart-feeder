@@ -3,9 +3,9 @@ from gpiozero import LED
 from mfrc522 import SimpleMFRC522
 from datetime import datetime, timezone
 
-from my_time import Time
-
+from Time import Time
 from Kintone import Kintone
+from HardwareController import HardwareController
 
 # def time0_is_after_time1(time_0, time_1):
 #     if time_0[HOUR] > time_1[HOUR]:
@@ -17,13 +17,13 @@ from Kintone import Kintone
 #     return False
 
 
-reader = SimpleMFRC522()
 
 def main():
+    reader = SimpleMFRC522()
     server = Kintone()
+    controller = HardwareController()
 
     while True:
-
         # blocking read
         last_read_nfc = reader.read_id()
 

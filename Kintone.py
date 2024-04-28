@@ -60,6 +60,7 @@ class Kintone:
         post = requests.post(api_url, headers={'X-Cybozu-API-Token': 'RKylBI2WhrLWJoSba87HT3b5QgBuuWIh6xF1Plyc'}, json=postJson)
 
     def update_pet_NFC_ID(self, NFC_ID):
+        self.update_last_eaten()
         for entry in self.schedule_table:
             if self.schedule_table[entry]["NFC_ID"] == "":
                 self.schedule_table[entry]["NFC_ID"] = NFC_ID

@@ -7,17 +7,6 @@ from Time import Time
 from Kintone import Kintone
 from HardwareController import HardwareController
 
-# def time0_is_after_time1(time_0, time_1):
-#     if time_0[HOUR] > time_1[HOUR]:
-#         return True
-#     elif time_0[HOUR] == time_1[HOUR]:
-#         if time_0[MINUTE] >= time_1[MINUTE]:
-#             return True
-
-#     return False
-
-
-
 def main():
     reader = SimpleMFRC522()
     server = Kintone()
@@ -60,24 +49,6 @@ def main():
         controller.dispense_units(units_to_dispense) # display on LED which pet got dispensed to
 
         server.push_last_eaten_timestamp(pet_id, now)
-
-
-        '''
-        Main loop structure:
-        
-        check NFC sensor
-            --> if tag detected, refresh data from kintone
-                match NFC tag detected to a pet
-                
-                check if pet is able to eat (check set times for pet's meals and last time pet has eaten)
-                    If able to eat --> dispense food (use given pet's units of food to rotate motor a certain number of degrees)
-                    If not able to eat --> (maybe play sound)
-
-            
-            Potential ideas / stretch goals : 
-                - If pet hasn't eaten 10 minutes past scheduled meal, play a sound or song
-        '''
-    pass
 
 if __name__ == "__main__":
     main()

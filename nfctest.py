@@ -14,6 +14,6 @@ def read_data(sector):
 sector_to_read = 1
 read_data = read_data(sector_to_read)
 if read_data is not None:
-print(“Data read:”, read_data)
+print("Data read:", read_data)
 else:
-print(“Error reading data”)
+print("Error reading data")

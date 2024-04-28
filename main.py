@@ -1,16 +1,25 @@
-import nfc
-from gpiozero import LED
 from mfrc522 import SimpleMFRC522
 from datetime import datetime, timezone
 
+import schedule
 from Time import Time
+import time
+from threading import Thread
 from Kintone import Kintone
 from HardwareController import HardwareController
 
 def main():
+    controller = HardwareController()
     reader = SimpleMFRC522()
     server = Kintone()
-    controller = HardwareController()
+
+    schedule.every().day.at("00:00:00").do(controller.resetLEDs)
+    def __schedule_loop():
+        while True:
+            time.sleep(1)
+            schedule.run_pending()
+    t = Thread(target=__schedule_loop)
+    t.start()
 
     ''' TODO:
     -Buzzer

@@ -8,12 +8,17 @@ from threading import Thread
 from Kintone import Kintone
 from HardwareController import HardwareController
 
+def midnight_reset():
+    controller.reset_LEDs()
+    for pet_id in server.last_eaten_table:
+        server.push_last_eaten_timestamp(entry, "")
+
 def main():
     controller = HardwareController()
     reader = SimpleMFRC522()
     server = Kintone()
 
-    schedule.every().day.at("00:00:00").do(controller.reset_LEDs)
+    schedule.every().day.at("00:00:00").do(midnight_reset)
     def __schedule_loop():
         while True:
             time.sleep(1)

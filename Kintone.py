@@ -36,8 +36,10 @@ class Kintone:
                 break
             response = json.loads(response.text)
             if pet_id == response["record"]["$id"]["value"]:
-                #convert time representations
-                return response["record"]["Text_1"]["value"]  
+                if response["record"]["Text_1"]["value"] == "":
+                    return Time(0, 0)
+                split = response["record"]["Text_1"]["value"].split(":")
+                return Time(split[0], split[1])
             id = id + 1
 
     def pet_id_from_NFC(self, NFC_ID):
